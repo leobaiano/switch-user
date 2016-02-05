@@ -13,6 +13,16 @@ if (!defined( 'ABSPATH' ))
 
 define('SU_TEXTDOMAIN', 'switch-user');
 
+/**
+ * Load the plugin text domain for translation.
+ *
+ * @return void
+ */
+function su_load_plugin_textdomain() {
+	load_plugin_textdomain( SU_TEXTDOMAIN, false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
+}
+add_action( 'plugins_loaded', 'su_load_plugin_textdomain' );
+
 function su_frontend() {
     if (is_user_logged_in()) :
         $users = get_users(array('order_by' => 'login'));
@@ -44,9 +54,14 @@ add_action('wp_footer', 'su_frontend');
  * Load scripts js and styles css
  */
 function su_enqueue_scripts() {
+	$msgs = array(
+				'change_success'	=> __( 'Current user successfully changed', SU_TEXTDOMAIN ),
+				'change_error'		=> __( 'Oops... error: please try again.', SU_TEXTDOMAIN ),
+				'connection_error'	=> __( '', SU_TEXTDOMAIN )
+			);
 	wp_enqueue_style(SU_TEXTDOMAIN . '_css_main', plugins_url( 'assets/css/main.css', __FILE__ ), array(), null, 'all');
 	wp_enqueue_script(SU_TEXTDOMAIN . '_js_main', plugins_url( 'assets/js/main.js', __FILE__ ), array( 'jquery' ), null, true);
-	wp_localize_script(SU_TEXTDOMAIN . '_js_main', 'SU', array('ajaxurl' => admin_url('admin-ajax.php')));
+	wp_localize_script(SU_TEXTDOMAIN . '_js_main', 'SU', array('ajaxurl' => admin_url('admin-ajax.php'), 'msgs' => $msgs));
 }
 add_action('wp_enqueue_scripts', 'su_enqueue_scripts');
 

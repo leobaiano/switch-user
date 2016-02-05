@@ -1,4 +1,5 @@
 jQuery(document).ready(function($) {
+	var msgs = SU.msgs;
 	$('.js-su-user').on('click', function(event) {
 		event.preventDefault();
 		if (!$('.su-wrapper').hasClass('working')) {
@@ -15,16 +16,16 @@ jQuery(document).ready(function($) {
 			})
 			.done(function(data) {
 				if (data.status == 'ok') {
-					alert('<?php _e("Current user successfully changed.", SU_TEXTDOMAIN) ?>');
+					alert( msgs.change_success );
 					window.location.reload(true);
 				} else if (data.msg != '') {
 					alert(data.msg);
 				} else {
-					alert('<?php _e("Oops... error: please try again.", SU_TEXTDOMAIN) ?>');
+					alert( SU.change_error );
 				}
 			})
 			.fail(function() {
-				alert('<?php _e("There was a connection error, please try again.", SU_TEXTDOMAIN) ?>');
+				alert( SU.connection_error );
 			});
 		}
 	});
